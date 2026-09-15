@@ -2,21 +2,36 @@
 <html lang="en">
 <head>
   <meta name="google-site-verification" content="gmsJINeY1VRIGDtB4-Y_fzh9zf7C0RYtYJTsZ-Bsk3U" />
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>CinePick — Discover Your Next Movie</title>
-<meta name="description" content="CinePick helps you discover movies from around the world by language, genre, rating, year and runtime.">
-<meta name="keywords" content="CinePick, movies, movie discovery, best movies, Hindi movies, Urdu movies, Korean movies, Japanese movies">
-<meta name="robots" content="index, follow">
-<meta name="author" content="CinePick">
 
-<meta property="og:title" content="CinePick — Discover Your Next Movie">
-<meta property="og:description" content="Discover your next movie by language, genre, rating, year and more.">
-<meta property="og:type" content="website">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+  <title>CinePick — Discover Your Next Movie</title>
+
+  <!-- SEO -->
+  <meta name="description" content="CinePick helps you discover movies from around the world by language, genre, rating, year and runtime. Find your next movie.">
+  <meta name="keywords" content="CinePick, movies, movie discovery, best movies, Hindi movies, Urdu movies, Korean movies, Japanese movies">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="CinePick">
+  <meta name="theme-color" content="#09090f">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="CinePick — Discover Your Next Movie">
+  <meta property="og:description" content="Discover your next movie by language, genre, rating, year and more.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://waleedahmed730900-glitch.github.io/-cinepick/">
+  <meta property="og:site_name" content="CinePick">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="CinePick — Discover Your Next Movie">
+  <meta name="twitter:description" content="Discover your next movie with CinePick.">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+
 :root{
   --bg:#07070a;
   --panel:#101116;
@@ -27,7 +42,9 @@
   --accent:#ff315d;
   --accent2:#ff6685;
 }
+
 html{scroll-behavior:smooth}
+
 body{
   background:
     radial-gradient(circle at 10% 0%,rgba(255,49,93,.13),transparent 28%),
@@ -37,6 +54,7 @@ body{
   font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   min-height:100vh;
 }
+
 button,input,select{font:inherit}
 button{cursor:pointer}
 button:disabled{opacity:.5;cursor:not-allowed}
@@ -55,13 +73,21 @@ nav{
   top:0;
   z-index:50;
 }
+
 .logo{
   font-size:27px;
   font-weight:900;
   letter-spacing:-1.5px;
 }
+
 .logo span{color:var(--accent)}
-.navRight{display:flex;align-items:center;gap:10px}
+
+.navRight{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
 .pill{
   padding:9px 14px;
   border:1px solid var(--line);
@@ -70,6 +96,7 @@ nav{
   font-size:12px;
   font-weight:700;
 }
+
 .loginBtn,.logoutBtn{
   border:0;
   color:white;
@@ -86,6 +113,7 @@ nav{
   padding:80px 24px 45px;
   text-align:center;
 }
+
 .badge{
   display:inline-flex;
   padding:8px 13px;
@@ -97,6 +125,7 @@ nav{
   font-weight:800;
   margin-bottom:20px;
 }
+
 .hero h1{
   font-size:clamp(45px,8vw,86px);
   line-height:.95;
@@ -104,11 +133,13 @@ nav{
   max-width:900px;
   margin:auto;
 }
+
 .hero h1 span{
   background:linear-gradient(90deg,#fff,#ff4d72);
   -webkit-background-clip:text;
   color:transparent;
 }
+
 .hero p{
   max-width:650px;
   margin:24px auto 30px;
@@ -116,6 +147,7 @@ nav{
   line-height:1.7;
   font-size:16px;
 }
+
 .searchBox{
   max-width:760px;
   margin:auto;
@@ -126,6 +158,7 @@ nav{
   border-radius:18px;
   box-shadow:0 20px 70px rgba(0,0,0,.35);
 }
+
 .searchBox input{
   flex:1;
   min-width:0;
@@ -135,6 +168,7 @@ nav{
   color:white;
   padding:15px 16px;
 }
+
 .searchBox button{
   border:0;
   background:var(--accent);
@@ -143,6 +177,7 @@ nav{
   padding:0 23px;
   font-weight:800;
 }
+
 .heroActions{
   margin-top:16px;
   display:flex;
@@ -150,6 +185,7 @@ nav{
   gap:10px;
   flex-wrap:wrap;
 }
+
 .heroActions button{
   padding:12px 18px;
   border-radius:12px;
@@ -157,6 +193,7 @@ nav{
   color:white;
   background:rgba(255,255,255,.05);
 }
+
 .heroActions .primary{
   background:linear-gradient(135deg,var(--accent),#ff174f);
   border:0;
@@ -177,6 +214,7 @@ nav{
   padding:20px;
   margin-bottom:38px;
 }
+
 .filterTop{
   display:flex;
   justify-content:space-between;
@@ -184,7 +222,9 @@ nav{
   gap:10px;
   margin-bottom:18px;
 }
+
 .filterTop h2{font-size:19px}
+
 .reset{
   color:#ff6685;
   background:none;
@@ -192,11 +232,13 @@ nav{
   font-size:13px;
   font-weight:800;
 }
+
 .filters{
   display:grid;
   grid-template-columns:repeat(6,1fr);
   gap:10px;
 }
+
 select{
   width:100%;
   background:#17181f;
@@ -214,6 +256,7 @@ select{
   align-items:end;
   margin:35px 0 18px;
 }
+
 .sectionHead h2{font-size:24px}
 .sectionHead span{color:var(--muted);font-size:13px}
 
@@ -223,13 +266,16 @@ select{
   grid-template-columns:repeat(6,1fr);
   gap:16px;
 }
+
 .card{
   min-width:0;
   position:relative;
   cursor:pointer;
   transition:.25s ease;
 }
+
 .card:hover{transform:translateY(-7px)}
+
 .poster{
   aspect-ratio:2/3;
   width:100%;
@@ -239,7 +285,9 @@ select{
   background:#17181f;
   border:1px solid rgba(255,255,255,.06);
 }
+
 .cardInfo{padding:10px 3px}
+
 .cardTitle{
   font-size:14px;
   font-weight:800;
@@ -247,6 +295,7 @@ select{
   overflow:hidden;
   text-overflow:ellipsis;
 }
+
 .cardMeta{
   margin-top:5px;
   display:flex;
@@ -254,7 +303,9 @@ select{
   color:var(--muted);
   font-size:11px;
 }
+
 .rating{color:#ffd35c}
+
 .favMini{
   position:absolute;
   top:9px;
@@ -267,6 +318,7 @@ select{
   color:white;
   backdrop-filter:blur(10px);
 }
+
 .favMini.active{color:#ff315d}
 
 /* LOAD */
@@ -275,6 +327,7 @@ select{
   justify-content:center;
   margin:35px 0;
 }
+
 .load button{
   background:#17181f;
   color:white;
@@ -292,6 +345,7 @@ select{
   border:1px dashed var(--line);
   border-radius:20px;
 }
+
 .empty strong{
   display:block;
   color:white;
@@ -311,7 +365,9 @@ select{
   padding:20px;
   z-index:100;
 }
+
 .modal.show{display:flex}
+
 .modalBox{
   width:min(430px,100%);
   background:#111218;
@@ -320,12 +376,14 @@ select{
   padding:24px;
   box-shadow:0 30px 100px rgba(0,0,0,.65);
 }
+
 .modalHead{
   display:flex;
   justify-content:space-between;
   align-items:center;
   margin-bottom:20px;
 }
+
 .close{
   background:#22232b;
   border:0;
@@ -335,7 +393,13 @@ select{
   border-radius:50%;
   font-size:20px;
 }
-.tabs{display:flex;gap:8px;margin-bottom:15px}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  margin-bottom:15px;
+}
+
 .tabs button{
   flex:1;
   padding:11px;
@@ -344,7 +408,12 @@ select{
   color:white;
   background:#181920;
 }
-.tabs .active{background:var(--accent);border-color:var(--accent)}
+
+.tabs .active{
+  background:var(--accent);
+  border-color:var(--accent);
+}
+
 .authInput{
   width:100%;
   padding:13px;
@@ -355,6 +424,7 @@ select{
   background:#181920;
   color:white;
 }
+
 .authSubmit{
   width:100%;
   margin-top:14px;
@@ -365,6 +435,7 @@ select{
   color:white;
   font-weight:800;
 }
+
 .authMsg{
   min-height:22px;
   margin-top:12px;
@@ -382,13 +453,16 @@ select{
   overflow:auto;
   display:none;
 }
+
 .detail.show{display:block}
+
 .detailBackdrop{
   min-height:560px;
   background-size:cover;
   background-position:center;
   position:relative;
 }
+
 .detailBackdrop:after{
   content:"";
   position:absolute;
@@ -397,6 +471,7 @@ select{
     linear-gradient(to top,#07070a 3%,transparent 65%),
     linear-gradient(to right,#07070a 0%,transparent 70%);
 }
+
 .detailContent{
   position:relative;
   z-index:2;
@@ -406,6 +481,7 @@ select{
   display:flex;
   gap:30px;
 }
+
 .detailPoster{
   width:260px;
   height:390px;
@@ -413,20 +489,24 @@ select{
   border-radius:18px;
   flex-shrink:0;
 }
+
 .detailText{
   align-self:flex-end;
   padding-bottom:20px;
 }
+
 .detailText h1{
   font-size:clamp(34px,5vw,65px);
   letter-spacing:-2px;
 }
+
 .detailText p{
   color:#b5b7c1;
   max-width:700px;
   line-height:1.7;
   margin:14px 0;
 }
+
 .detailMeta{
   display:flex;
   gap:12px;
@@ -434,11 +514,13 @@ select{
   color:#ddd;
   font-size:13px;
 }
+
 .detailButtons{
   margin-top:18px;
   display:flex;
   gap:9px;
 }
+
 .detailButtons button{
   padding:12px 17px;
   border-radius:11px;
@@ -446,10 +528,12 @@ select{
   color:white;
   background:#17181f;
 }
+
 .detailButtons .fav{
   background:var(--accent);
   border:0;
 }
+
 .detailClose{
   position:fixed;
   right:25px;
@@ -483,12 +567,16 @@ footer{
   animation:spin .7s linear infinite;
   margin:40px auto;
 }
-@keyframes spin{to{transform:rotate(360deg)}}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
 
 @media(max-width:1000px){
   .filters{grid-template-columns:repeat(3,1fr)}
   .grid{grid-template-columns:repeat(5,1fr)}
 }
+
 @media(max-width:700px){
   nav{padding:0 18px}
   .pill{display:none}
@@ -502,9 +590,13 @@ footer{
     margin:-170px auto 0;
     display:block;
   }
-  .detailPoster{width:180px;height:270px}
+  .detailPoster{
+    width:180px;
+    height:270px;
+  }
   .detailText{padding-top:22px}
 }
+
 @media(max-width:430px){
   .grid{grid-template-columns:repeat(2,1fr)}
   .filters{grid-template-columns:1fr 1fr}
@@ -660,7 +752,6 @@ footer{
   </div>
 </footer>
 
-
 <!-- AUTH MODAL -->
 <div class="modal" id="authModal">
   <div class="modalBox">
@@ -684,7 +775,6 @@ footer{
 
   </div>
 </div>
-
 
 <!-- MOVIE DETAIL -->
 <div class="detail" id="detail">
@@ -715,7 +805,6 @@ footer{
   </div>
 </div>
 
-
 <script>
 
 /* =========================================================
@@ -724,7 +813,8 @@ footer{
 
 const TMDB_KEY = "abaa386166aea530b3ff4c32d994abb8";
 
-const SUPABASE_URL = "https://hqjdrbbcibxlmrurkidr.supabase.co";
+const SUPABASE_URL =
+"https://hqjdrbbcibxlmrurkidr.supabase.co";
 
 const SUPABASE_KEY =
 "sb_publishable_SC-VwNiX8-dSCQwwnsYbPQ_eblJVFi4X";
@@ -741,7 +831,6 @@ const IMG =
 const BACKDROP =
 "https://image.tmdb.org/t/p/original";
 
-
 /* =========================================================
    STATE
 ========================================================= */
@@ -755,7 +844,6 @@ let searchMode = false;
 
 let favorites =
 JSON.parse(localStorage.getItem("cinepickFavorites") || "[]");
-
 
 /* =========================================================
    ELEMENTS
@@ -785,7 +873,6 @@ document.getElementById("authModal");
 const authBtn =
 document.getElementById("authBtn");
 
-
 /* =========================================================
    API
 ========================================================= */
@@ -811,9 +898,7 @@ async function api(path,params={}){
   }
 
   return response.json();
-
 }
-
 
 /* =========================================================
    FILTERS
@@ -858,21 +943,25 @@ function getFilters(){
     if(year === "2020")
       params.primary_release_date_gte = "2020-01-01";
 
-    else if(year === "2010")
-      params.primary_release_date_gte = "2010-01-01",
+    else if(year === "2010"){
+      params.primary_release_date_gte = "2010-01-01";
       params.primary_release_date_lte = "2019-12-31";
+    }
 
-    else if(year === "2000")
-      params.primary_release_date_gte = "2000-01-01",
+    else if(year === "2000"){
+      params.primary_release_date_gte = "2000-01-01";
       params.primary_release_date_lte = "2009-12-31";
+    }
 
-    else if(year === "1990")
-      params.primary_release_date_gte = "1990-01-01",
+    else if(year === "1990"){
+      params.primary_release_date_gte = "1990-01-01";
       params.primary_release_date_lte = "1999-12-31";
+    }
 
-    else if(year === "1980")
-      params.primary_release_date_gte = "1980-01-01",
+    else if(year === "1980"){
+      params.primary_release_date_gte = "1980-01-01";
       params.primary_release_date_lte = "1989-12-31";
+    }
 
     else
       params.primary_release_year = year;
@@ -890,9 +979,7 @@ function getFilters(){
     params.with_runtime_gte = 120;
 
   return params;
-
 }
-
 
 /* =========================================================
    LOAD DISCOVER MOVIES
@@ -904,6 +991,7 @@ async function loadMovies(reset=true){
 
     page = 1;
     currentMovies = [];
+
     movieGrid.innerHTML =
       '<div class="spinner"></div>';
 
@@ -940,7 +1028,7 @@ async function loadMovies(reset=true){
       document.createElement("button");
 
       btn.textContent =
-      `Load More Movies  •  Page ${page}`;
+      `Load More Movies • Page ${page}`;
 
       btn.onclick = async ()=>{
 
@@ -954,7 +1042,6 @@ async function loadMovies(reset=true){
       };
 
       loadArea.appendChild(btn);
-
     }
 
   }catch(error){
@@ -969,11 +1056,8 @@ async function loadMovies(reset=true){
     `;
 
     resultText.textContent = "Error";
-
   }
-
 }
-
 
 /* =========================================================
    SEARCH
@@ -1018,7 +1102,7 @@ async function searchMovies(){
     renderMovies(currentMovies);
 
     resultText.textContent =
-      `${data.total_results.toLocaleString()} results`;
+    `${data.total_results.toLocaleString()} results`;
 
     loadArea.innerHTML = "";
 
@@ -1034,7 +1118,6 @@ async function searchMovies(){
       loadMoreSearch;
 
       loadArea.appendChild(btn);
-
     }
 
   }catch(error){
@@ -1044,11 +1127,8 @@ async function searchMovies(){
       <strong>Search failed</strong>
       Try another movie name.
     </div>`;
-
   }
-
 }
-
 
 async function loadMoreSearch(){
 
@@ -1072,11 +1152,8 @@ async function loadMoreSearch(){
   }catch(e){
 
     console.error(e);
-
   }
-
 }
-
 
 /* =========================================================
    RENDER MOVIES
@@ -1094,14 +1171,11 @@ function renderMovies(movies){
     `;
 
     return;
-
   }
 
   movieGrid.innerHTML =
   movies.map(movieCard).join("");
-
 }
-
 
 /* =========================================================
    MOVIE CARD
@@ -1158,9 +1232,7 @@ function movieCard(movie){
 
     </div>
   `;
-
 }
-
 
 /* =========================================================
    OPEN MOVIE
@@ -1240,11 +1312,8 @@ async function openMovie(id){
   }catch(error){
 
     console.error(error);
-
   }
-
 }
-
 
 function closeMovie(){
 
@@ -1252,9 +1321,7 @@ function closeMovie(){
   .classList.remove("show");
 
   document.body.style.overflow="";
-
 }
-
 
 /* =========================================================
    FAVORITES
@@ -1277,7 +1344,6 @@ function toggleFavorite(id){
 
     if(movie)
       favorites.unshift(movie);
-
   }
 
   localStorage.setItem(
@@ -1292,9 +1358,7 @@ function toggleFavorite(id){
   if(currentMovie &&
      currentMovie.id===id)
     updateDetailFavorite();
-
 }
-
 
 function updateDetailFavorite(){
 
@@ -1310,9 +1374,7 @@ function updateDetailFavorite(){
   saved
   ? "♥ Remove from Favorites"
   : "♡ Add to Favorites";
-
 }
-
 
 function renderFavorites(){
 
@@ -1330,25 +1392,20 @@ function renderFavorites(){
     `;
 
     return;
-
   }
 
   favoriteGrid.innerHTML =
   favorites.slice(0,12)
   .map(movieCard)
   .join("");
-
 }
-
 
 function updateFavCounter(){
 
   document.getElementById("favPill")
   .textContent =
   `♡ ${favorites.length}`;
-
 }
-
 
 /* =========================================================
    RESET
@@ -1369,9 +1426,7 @@ function resetFilters(){
   "Trending Movies";
 
   loadMovies(true);
-
 }
-
 
 /* =========================================================
    SURPRISE
@@ -1399,17 +1454,13 @@ async function surprise(){
       ];
 
       openMovie(movie.id);
-
     }
 
   }catch(e){
 
     console.error(e);
-
   }
-
 }
-
 
 /* =========================================================
    TRENDING
@@ -1441,11 +1492,8 @@ async function trending(){
   }catch(e){
 
     console.error(e);
-
   }
-
 }
-
 
 /* =========================================================
    TOP RATED
@@ -1477,11 +1525,8 @@ async function topRated(){
   }catch(e){
 
     console.error(e);
-
   }
-
 }
-
 
 /* =========================================================
    AUTH
@@ -1491,16 +1536,12 @@ function openAuth(){
 
   authModal.classList.add("show");
   document.getElementById("authMsg").textContent="";
-
 }
-
 
 function closeAuth(){
 
   authModal.classList.remove("show");
-
 }
-
 
 function setAuthMode(mode){
 
@@ -1525,9 +1566,7 @@ function setAuthMode(mode){
 
   document.getElementById("authMsg")
   .textContent="";
-
 }
-
 
 async function submitAuth(){
 
@@ -1546,7 +1585,6 @@ async function submitAuth(){
     "Please enter your email and password.";
 
     return;
-
   }
 
   msg.textContent =
@@ -1590,20 +1628,15 @@ async function submitAuth(){
         "Account created successfully!";
 
         setTimeout(closeAuth,700);
-
       }
-
     }
 
   }catch(error){
 
     msg.textContent =
     error.message || "Authentication failed.";
-
   }
-
 }
-
 
 function updateUser(session){
 
@@ -1628,20 +1661,15 @@ function updateUser(session){
 
     authBtn.onclick =
     openAuth;
-
   }
-
 }
-
 
 async function logout(){
 
   await supabaseClient.auth.signOut();
 
   updateUser(null);
-
 }
-
 
 /* =========================================================
    SECURITY / TEXT
@@ -1655,9 +1683,7 @@ function escapeHTML(text){
   .replaceAll(">","&gt;")
   .replaceAll('"',"&quot;")
   .replaceAll("'","&#039;");
-
 }
-
 
 /* =========================================================
    EVENTS
@@ -1672,7 +1698,6 @@ searchInput.addEventListener("keydown",e=>{
     searchMovies();
 
 });
-
 
 document.getElementById("surpriseBtn")
 .onclick = surprise;
@@ -1712,7 +1737,6 @@ document.getElementById("detailFav")
 
 };
 
-
 [
   "language",
   "genre",
@@ -1731,11 +1755,9 @@ document.getElementById("detailFav")
     "Discover Movies";
 
     loadMovies(true);
-
   });
 
 });
-
 
 authModal.addEventListener("click",e=>{
 
@@ -1743,7 +1765,6 @@ authModal.addEventListener("click",e=>{
     closeAuth();
 
 });
-
 
 /* =========================================================
    SUPABASE SESSION
@@ -1756,14 +1777,12 @@ supabaseClient.auth.getSession()
 
 });
 
-
 supabaseClient.auth.onAuthStateChange(
 (event,session)=>{
 
   updateUser(session);
 
 });
-
 
 /* =========================================================
    START
