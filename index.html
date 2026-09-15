@@ -92,7 +92,11 @@ header{
   box-shadow:0 0 0 4px rgba(229,9,20,.08);
 }
 
-.nav-actions{display:flex;gap:8px}
+.nav-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
 
 .btn{
   border:1px solid var(--line);
@@ -285,9 +289,7 @@ header{
 }
 
 
-/* =========================
-   CINEMATIC MOVIE DETAILS
-========================= */
+/* MOVIE DETAILS */
 
 .movie-modal{
   position:fixed;
@@ -588,6 +590,152 @@ header{
   cursor:pointer;
 }
 
+
+/* USER LIBRARY */
+
+.library-modal{
+  position:fixed;
+  inset:0;
+  z-index:600;
+  display:none;
+  background:#07070b;
+  overflow-y:auto;
+}
+
+.library-modal.show{
+  display:block;
+  animation:modalIn .3s ease;
+}
+
+.library-header{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:rgba(7,7,11,.9);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);
+  padding:20px 25px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.library-header h2{
+  font-size:26px;
+}
+
+.library-tabs{
+  max-width:1400px;
+  margin:auto;
+  padding:25px 22px 10px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.library-tab.active{
+  background:var(--red);
+  border-color:var(--red);
+}
+
+.library-content{
+  max-width:1400px;
+  margin:auto;
+  padding:10px 22px 60px;
+}
+
+.library-empty{
+  text-align:center;
+  padding:100px 20px;
+  color:var(--muted);
+}
+
+.library-empty h3{
+  color:#fff;
+  font-size:25px;
+  margin-bottom:8px;
+}
+
+
+/* PROFILE */
+
+.profile-box{
+  max-width:900px;
+  margin:45px auto;
+  padding:35px;
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:linear-gradient(145deg,#15151e,#0d0d13);
+}
+
+.profile-avatar{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#e50914,#641cff);
+  font-size:35px;
+  font-weight:900;
+  margin-bottom:18px;
+}
+
+.profile-email{
+  color:var(--muted);
+  margin-top:6px;
+}
+
+.profile-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:25px;
+}
+
+.profile-stat{
+  padding:20px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:#111119;
+}
+
+.profile-stat strong{
+  display:block;
+  font-size:27px;
+}
+
+.profile-stat span{
+  color:var(--muted);
+  font-size:12px;
+}
+
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:25px;
+  transform:translate(-50%,20px);
+  z-index:1000;
+  padding:13px 18px;
+  border-radius:12px;
+  background:#171720;
+  border:1px solid var(--line);
+  box-shadow:0 15px 40px rgba(0,0,0,.4);
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+
 footer{
   border-top:1px solid var(--line);
   padding:35px 22px;
@@ -614,7 +762,12 @@ footer{
     width:100%;
   }
 
-  .nav-actions .btn{flex:1}
+  .nav-actions .btn{
+    flex:1;
+    min-width:0;
+    padding:10px 8px;
+    font-size:12px;
+  }
 
   .hero{
     padding-top:45px;
@@ -659,6 +812,19 @@ footer{
     background:
       linear-gradient(0deg,#050507 0%,rgba(5,5,7,.75) 45%,transparent 100%);
   }
+
+  .profile-box{
+    margin:25px 20px;
+    padding:25px;
+  }
+
+  .profile-stats{
+    grid-template-columns:1fr;
+  }
+
+  .library-header{
+    padding:16px;
+  }
 }
 </style>
 </head>
@@ -675,8 +841,19 @@ footer{
     </div>
 
     <div class="nav-actions">
-      <button class="btn" onclick="showFavorites()">❤️ Favorites</button>
-      <button class="btn primary" id="authButton" onclick="openAuth()">Login</button>
+
+      <button class="btn" onclick="openLibrary('favorite')">
+        ❤️ Favorites
+      </button>
+
+      <button class="btn" onclick="openLibrary('watchlist')">
+        📋 Watchlist
+      </button>
+
+      <button class="btn primary" id="authButton" onclick="openAuth()">
+        Login
+      </button>
+
     </div>
 
   </div>
@@ -699,9 +876,27 @@ footer{
   </p>
 
   <div class="hero-actions">
-    <button class="btn primary" onclick="loadTrending()">🔥 Trending</button>
-    <button class="btn" onclick="loadTopRated()">⭐ Top Rated</button>
-    <button class="btn" onclick="surpriseMe()">🎲 Surprise Me</button>
+
+    <button class="btn primary" onclick="loadTrending()">
+      🔥 Trending
+    </button>
+
+    <button class="btn" onclick="loadTopRated()">
+      ⭐ Top Rated
+    </button>
+
+    <button class="btn" onclick="surpriseMe()">
+      🎲 Surprise Me
+    </button>
+
+    <button class="btn" onclick="openLibrary('history')">
+      🕐 Recently Viewed
+    </button>
+
+    <button class="btn" onclick="openProfile()">
+      👤 My Profile
+    </button>
+
   </div>
 
 </section>
@@ -790,8 +985,13 @@ footer{
 
 <div class="section-head">
   <div>
-    <div class="section-title" id="sectionTitle">Discover Movies</div>
-    <div class="section-sub" id="resultText">Loading movies...</div>
+    <div class="section-title" id="sectionTitle">
+      Discover Movies
+    </div>
+
+    <div class="section-sub" id="resultText">
+      Loading movies...
+    </div>
   </div>
 </div>
 
@@ -800,7 +1000,9 @@ footer{
 <div id="loader"></div>
 
 <div class="load">
-<button id="loadMoreBtn" class="btn primary" onclick="loadMore()">Load More</button>
+<button id="loadMoreBtn" class="btn primary" onclick="loadMore()">
+Load More
+</button>
 </div>
 
 </section>
@@ -810,13 +1012,14 @@ footer{
 
 <footer>
 <div>CinePick — Discover. Explore. Watch.</div>
+
 <div style="margin-top:10px">
 This product uses the TMDB API but is not endorsed or certified by TMDB.
 </div>
 </footer>
 
 
-<!-- CINEMATIC DETAILS -->
+<!-- MOVIE DETAILS -->
 
 <div id="movieModal" class="movie-modal">
 
@@ -837,11 +1040,17 @@ This product uses the TMDB API but is not endorsed or certified by TMDB.
       <div class="movie-tagline" id="detailTagline"></div>
 
       <div class="movie-stats">
+
         <span class="stat" id="detailRating"></span>
+
         <span class="dot">•</span>
+
         <span class="stat" id="detailYear"></span>
+
         <span class="dot">•</span>
+
         <span class="stat" id="detailRuntime"></span>
+
       </div>
 
       <div class="detail-genres" id="detailGenres"></div>
@@ -860,6 +1069,10 @@ This product uses the TMDB API but is not endorsed or certified by TMDB.
           ❤️ Favorite
         </button>
 
+        <button class="btn big-btn" id="watchlistButton" onclick="toggleWatchlist()">
+          📋 Watchlist
+        </button>
+
         <button class="btn big-btn" onclick="shareMovie()">
           📤 Share
         </button>
@@ -873,7 +1086,9 @@ This product uses the TMDB API but is not endorsed or certified by TMDB.
 
   <div class="cast-area">
 
-    <div class="cast-heading">🎭 Top Cast</div>
+    <div class="cast-heading">
+      🎭 Top Cast
+    </div>
 
     <div class="cast-grid" id="castGrid"></div>
 
@@ -912,25 +1127,40 @@ allowfullscreen>
 
 <button class="auth-close" onclick="closeAuth()">×</button>
 
-<h2 id="authTitle">Welcome back</h2>
+<h2 id="authTitle">
+Welcome back
+</h2>
 
 <p id="authDescription">
 Login to your CinePick account.
 </p>
 
-<input id="authEmail" type="email" placeholder="Email">
+<input
+id="authEmail"
+type="email"
+placeholder="Email">
 
-<input id="authPassword" type="password" placeholder="Password">
+<input
+id="authPassword"
+type="password"
+placeholder="Password">
 
-<button class="btn primary" id="authSubmit" onclick="handleAuth()">
+<button
+class="btn primary"
+id="authSubmit"
+onclick="handleAuth()">
 Login
 </button>
 
 <div class="auth-switch">
 
-<span id="authSwitchText">Don't have an account?</span>
+<span id="authSwitchText">
+Don't have an account?
+</span>
 
-<span onclick="toggleAuthMode()" id="authSwitchButton">
+<span
+onclick="toggleAuthMode()"
+id="authSwitchButton">
 Sign up
 </span>
 
@@ -939,6 +1169,146 @@ Sign up
 </div>
 
 </div>
+
+
+<!-- USER LIBRARY -->
+
+<div id="libraryModal" class="library-modal">
+
+<div class="library-header">
+
+<div>
+<h2 id="libraryTitle">
+❤️ My Favorites
+</h2>
+
+<div
+id="librarySubtitle"
+style="color:#777;margin-top:4px;font-size:13px">
+Your personal CinePick library
+</div>
+</div>
+
+<button class="close-detail" onclick="closeLibrary()">
+×
+</button>
+
+</div>
+
+
+<div class="library-tabs">
+
+<button
+class="btn library-tab active"
+id="favoriteTab"
+onclick="openLibrary('favorite')">
+❤️ Favorites
+</button>
+
+<button
+class="btn library-tab"
+id="watchlistTab"
+onclick="openLibrary('watchlist')">
+📋 Watchlist
+</button>
+
+<button
+class="btn library-tab"
+id="historyTab"
+onclick="openLibrary('history')">
+🕐 Recently Viewed
+</button>
+
+</div>
+
+
+<div class="library-content">
+
+<div id="libraryGrid" class="grid"></div>
+
+</div>
+
+</div>
+
+
+<!-- PROFILE -->
+
+<div id="profileModal" class="library-modal">
+
+<div class="library-header">
+
+<div>
+<h2>👤 My Profile</h2>
+
+<div
+style="color:#777;margin-top:4px;font-size:13px">
+Your CinePick account
+</div>
+</div>
+
+<button class="close-detail" onclick="closeProfile()">
+×
+</button>
+
+</div>
+
+
+<div class="profile-box">
+
+<div
+class="profile-avatar"
+id="profileAvatar">
+C
+</div>
+
+<h2 id="profileEmail">
+Guest
+</h2>
+
+<div
+class="profile-email"
+id="profileJoined">
+Login to see your account information.
+</div>
+
+<div class="profile-stats">
+
+<div class="profile-stat">
+<strong id="profileFavorites">0</strong>
+<span>Favorites</span>
+</div>
+
+<div class="profile-stat">
+<strong id="profileWatchlist">0</strong>
+<span>Watchlist</span>
+</div>
+
+<div class="profile-stat">
+<strong id="profileHistory">0</strong>
+<span>Recently Viewed</span>
+</div>
+
+</div>
+
+<div style="margin-top:25px">
+
+<button
+class="btn"
+style="width:100%"
+onclick="logout()">
+🚪 Logout
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div id="toast" class="toast"></div>
 
 
 <script>
@@ -957,28 +1327,45 @@ SUPABASE_URL,
 SUPABASE_KEY
 );
 
-const IMG="https://image.tmdb.org/t/p/w500";
+const IMG=
+"https://image.tmdb.org/t/p/w500";
 
-const BACKDROP="https://image.tmdb.org/t/p/original";
+const BACKDROP=
+"https://image.tmdb.org/t/p/original";
+
 
 let page=1;
 let totalPages=1;
 let loading=false;
+
 let currentMovie=null;
 let currentMovies=[];
+
 let authMode="login";
 
+let currentLibrary="favorite";
+
+
+/* =========================
+   API
+========================= */
 
 async function api(url){
 
 const r=await fetch(url);
 
-if(!r.ok) throw new Error("API error");
+if(!r.ok){
+throw new Error("API error");
+}
 
 return await r.json();
 
 }
 
+
+/* =========================
+   MOVIES
+========================= */
 
 async function loadMovies(reset=false){
 
@@ -988,6 +1375,7 @@ if(reset){
 
 page=1;
 currentMovies=[];
+
 document.getElementById("movieGrid").innerHTML="";
 
 }
@@ -1001,38 +1389,72 @@ document.getElementById("loadMoreBtn").style.display="none";
 
 try{
 
-const language=document.getElementById("language").value;
-const genre=document.getElementById("genre").value;
-const rating=document.getElementById("rating").value;
-const year=document.getElementById("year").value;
-const runtime=document.getElementById("runtime").value;
-const sort=document.getElementById("sort").value;
+const language=
+document.getElementById("language").value;
+
+const genre=
+document.getElementById("genre").value;
+
+const rating=
+document.getElementById("rating").value;
+
+const year=
+document.getElementById("year").value;
+
+const runtime=
+document.getElementById("runtime").value;
+
+const sort=
+document.getElementById("sort").value;
+
 
 const p=new URLSearchParams({
+
 api_key:TMDB_KEY,
+
 language:"en-US",
+
 page:page,
+
 sort_by:sort,
+
 include_adult:"false",
+
 include_video:"true",
+
 "vote_count.gte":"30"
+
 });
 
-if(language)p.append("with_original_language",language);
-if(genre)p.append("with_genres",genre);
-if(rating)p.append("vote_average.gte",rating);
-if(year)p.append("primary_release_year",year);
-if(runtime)p.append("with_runtime.gte",runtime);
+
+if(language)
+p.append("with_original_language",language);
+
+if(genre)
+p.append("with_genres",genre);
+
+if(rating)
+p.append("vote_average.gte",rating);
+
+if(year)
+p.append("primary_release_year",year);
+
+if(runtime)
+p.append("with_runtime.gte",runtime);
+
 
 const data=await api(
 "https://api.themoviedb.org/3/discover/movie?"+p
 );
 
+
 totalPages=data.total_pages||1;
 
-currentMovies=currentMovies.concat(data.results||[]);
+currentMovies=
+currentMovies.concat(data.results||[]);
 
 renderMovies(data.results||[]);
+
 
 document.getElementById("resultText").textContent=
 `${data.total_results||0} movies found`;
@@ -1040,21 +1462,27 @@ document.getElementById("resultText").textContent=
 document.getElementById("loadMoreBtn").style.display=
 page<totalPages?"block":"none";
 
+
 }catch(e){
 
 console.error(e);
 
-document.getElementById("movieGrid").innerHTML=
-`
+document.getElementById("movieGrid").innerHTML=`
+
 <div class="empty" style="grid-column:1/-1">
+
 <h3>Something went wrong 😕</h3>
+
 <p>Please refresh and try again.</p>
+
 </div>
+
 `;
 
 }finally{
 
 loading=false;
+
 document.getElementById("loader").innerHTML="";
 
 }
@@ -1064,21 +1492,28 @@ document.getElementById("loader").innerHTML="";
 
 function renderMovies(movies){
 
-const grid=document.getElementById("movieGrid");
+const grid=
+document.getElementById("movieGrid");
+
 
 if(!movies.length && page===1){
 
-grid.innerHTML=
-`
+grid.innerHTML=`
+
 <div class="empty" style="grid-column:1/-1">
+
 <h3>No movies found 🎬</h3>
+
 <p>Try changing your filters.</p>
+
 </div>
+
 `;
 
 return;
 
 }
+
 
 movies.forEach(movie=>{
 
@@ -1086,24 +1521,40 @@ const card=document.createElement("div");
 
 card.className="card";
 
+
 const poster=
 movie.poster_path
 ?IMG+movie.poster_path
 :"";
+
 
 const year=
 movie.release_date
 ?movie.release_date.slice(0,4)
 :"N/A";
 
-card.innerHTML=
-`
+
+card.innerHTML=`
+
 <div class="poster">
 
 ${
 poster
-?`<img src="${poster}" loading="lazy" alt="${escapeHTML(movie.title)}">`
-:`<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:40px">🎬</div>`
+
+?`<img
+src="${poster}"
+loading="lazy"
+alt="${escapeHTML(movie.title)}">`
+
+:`<div
+style="
+display:flex;
+align-items:center;
+justify-content:center;
+height:100%;
+font-size:40px">
+🎬
+</div>`
 }
 
 <div class="rating">
@@ -1112,6 +1563,7 @@ poster
 
 </div>
 
+
 <div class="card-info">
 
 <div class="card-title">
@@ -1119,16 +1571,26 @@ ${escapeHTML(movie.title||"Untitled")}
 </div>
 
 <div class="card-meta">
+
 <span>${year}</span>
-<span>⭐ ${Number(movie.vote_average||0).toFixed(1)}</span>
+
+<span>
+⭐ ${Number(movie.vote_average||0).toFixed(1)}
+</span>
+
 </div>
 
-<button class="card-btn" onclick="openMovie(${movie.id})">
+
+<button
+class="card-btn"
+onclick="openMovie(${movie.id})">
 View Details
 </button>
 
 </div>
+
 `;
+
 
 grid.appendChild(card);
 
@@ -1142,6 +1604,7 @@ function loadMore(){
 if(page>=totalPages)return;
 
 page++;
+
 loadMovies();
 
 }
@@ -1154,6 +1617,10 @@ loadMovies(true);
 }
 
 
+/* =========================
+   SEARCH
+========================= */
+
 let searchTimer;
 
 document.getElementById("searchInput")
@@ -1163,12 +1630,13 @@ clearTimeout(searchTimer);
 
 const query=this.value.trim();
 
+
 searchTimer=setTimeout(()=>{
 
 if(!query){
 
-document.getElementById("sectionTitle").textContent=
-"Discover Movies";
+document.getElementById("sectionTitle")
+.textContent="Discover Movies";
 
 loadMovies(true);
 
@@ -1185,35 +1653,50 @@ searchMovies(query);
 
 async function searchMovies(query){
 
-document.getElementById("sectionTitle").textContent=
-`Search: ${query}`;
+document.getElementById("sectionTitle")
+.textContent=`Search: ${query}`;
 
-document.getElementById("movieGrid").innerHTML="";
-document.getElementById("loadMoreBtn").style.display="none";
+document.getElementById("movieGrid")
+.innerHTML="";
 
-document.getElementById("loader").innerHTML=
-'<div class="spinner"></div>';
+document.getElementById("loadMoreBtn")
+.style.display="none";
+
+document.getElementById("loader")
+.innerHTML='<div class="spinner"></div>';
+
 
 try{
 
 const p=new URLSearchParams({
+
 api_key:TMDB_KEY,
+
 language:"en-US",
+
 query:query,
+
 page:"1",
+
 include_adult:"false"
+
 });
+
 
 const data=await api(
 "https://api.themoviedb.org/3/search/movie?"+p
 );
 
+
 currentMovies=data.results||[];
 
 renderMovies(data.results||[]);
 
-document.getElementById("resultText").textContent=
+
+document.getElementById("resultText")
+.textContent=
 `${data.total_results||0} results`;
+
 
 }catch(e){
 
@@ -1221,24 +1704,32 @@ console.error(e);
 
 }finally{
 
-document.getElementById("loader").innerHTML="";
+document.getElementById("loader")
+.innerHTML="";
 
 }
 
 }
 
+
+/* =========================
+   TRENDING
+========================= */
 
 async function loadTrending(){
 
-document.getElementById("sectionTitle").textContent=
-"🔥 Trending Movies";
+document.getElementById("sectionTitle")
+.textContent="🔥 Trending Movies";
 
-document.getElementById("movieGrid").innerHTML="";
+document.getElementById("movieGrid")
+.innerHTML="";
 
-document.getElementById("loadMoreBtn").style.display="none";
+document.getElementById("loadMoreBtn")
+.style.display="none";
 
-document.getElementById("loader").innerHTML=
-'<div class="spinner"></div>';
+document.getElementById("loader")
+.innerHTML='<div class="spinner"></div>';
+
 
 try{
 
@@ -1250,8 +1741,9 @@ currentMovies=data.results||[];
 
 renderMovies(data.results||[]);
 
-document.getElementById("resultText").textContent=
-"Popular this week";
+document.getElementById("resultText")
+.textContent="Popular this week";
+
 
 }catch(e){
 
@@ -1259,24 +1751,32 @@ console.error(e);
 
 }finally{
 
-document.getElementById("loader").innerHTML="";
+document.getElementById("loader")
+.innerHTML="";
 
 }
 
 }
 
+
+/* =========================
+   TOP RATED
+========================= */
 
 async function loadTopRated(){
 
-document.getElementById("sectionTitle").textContent=
-"⭐ Top Rated Movies";
+document.getElementById("sectionTitle")
+.textContent="⭐ Top Rated Movies";
 
-document.getElementById("movieGrid").innerHTML="";
+document.getElementById("movieGrid")
+.innerHTML="";
 
-document.getElementById("loadMoreBtn").style.display="none";
+document.getElementById("loadMoreBtn")
+.style.display="none";
 
-document.getElementById("loader").innerHTML=
-'<div class="spinner"></div>';
+document.getElementById("loader")
+.innerHTML='<div class="spinner"></div>';
+
 
 try{
 
@@ -1288,8 +1788,9 @@ currentMovies=data.results||[];
 
 renderMovies(data.results||[]);
 
-document.getElementById("resultText").textContent=
-"Highest rated movies";
+document.getElementById("resultText")
+.textContent="Highest rated movies";
+
 
 }catch(e){
 
@@ -1297,31 +1798,46 @@ console.error(e);
 
 }finally{
 
-document.getElementById("loader").innerHTML="";
+document.getElementById("loader")
+.innerHTML="";
 
 }
 
 }
 
+
+/* =========================
+   SURPRISE
+========================= */
 
 async function surpriseMe(){
 
 try{
 
-const randomPage=Math.floor(Math.random()*10)+1;
+const randomPage=
+Math.floor(Math.random()*10)+1;
+
 
 const data=await api(
+
 `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_KEY}&sort_by=popularity.desc&page=${randomPage}&vote_count.gte=100`
+
 );
+
 
 if(!data.results?.length)return;
 
+
 const movie=
 data.results[
-Math.floor(Math.random()*data.results.length)
+Math.floor(
+Math.random()*data.results.length
+)
 ];
 
+
 openMovie(movie.id);
+
 
 }catch(e){
 
@@ -1333,106 +1849,148 @@ console.error(e);
 
 
 /* =========================
-   CINEMATIC DETAILS
+   MOVIE DETAILS
 ========================= */
 
 async function openMovie(id){
 
-const modal=document.getElementById("movieModal");
+const modal=
+document.getElementById("movieModal");
 
 modal.classList.add("show");
 
 document.body.style.overflow="hidden";
 
-document.getElementById("detailTitle").textContent="Loading...";
 
-document.getElementById("detailOverview").textContent="";
+document.getElementById("detailTitle")
+.textContent="Loading...";
+
+document.getElementById("detailOverview")
+.textContent="";
+
 
 try{
 
 const movie=await api(
+
 `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_KEY}&language=en-US&append_to_response=credits,videos`
+
 );
+
 
 currentMovie=movie;
 
 renderMovieDetails(movie);
 
+await addToHistory(movie);
+
+
 }catch(e){
 
 console.error(e);
 
-document.getElementById("detailTitle").textContent=
-"Could not load movie.";
+document.getElementById("detailTitle")
+.textContent="Could not load movie.";
 
 }
 
 }
 
 
-function renderMovieDetails(movie){
+async function renderMovieDetails(movie){
 
-const backdrop=document.getElementById("detailBackdrop");
+const backdrop=
+document.getElementById("detailBackdrop");
+
 
 backdrop.src=
-movie.backdrop_path
-?BACKDROP+movie.backdrop_path
-:(movie.poster_path?IMG+movie.poster_path:"");
 
-document.getElementById("detailTitle").textContent=
+movie.backdrop_path
+
+?BACKDROP+movie.backdrop_path
+
+:(movie.poster_path
+?IMG+movie.poster_path
+:"");
+
+
+document.getElementById("detailTitle")
+.textContent=
 movie.title||"Untitled";
 
-document.getElementById("detailTagline").textContent=
+
+document.getElementById("detailTagline")
+.textContent=
 movie.tagline||"";
 
-document.getElementById("detailRating").textContent=
+
+document.getElementById("detailRating")
+.textContent=
 `⭐ ${Number(movie.vote_average||0).toFixed(1)}`;
 
-document.getElementById("detailYear").textContent=
+
+document.getElementById("detailYear")
+.textContent=
 movie.release_date
 ?movie.release_date.slice(0,4)
 :"N/A";
 
-document.getElementById("detailRuntime").textContent=
+
+document.getElementById("detailRuntime")
+.textContent=
 movie.runtime
 ?formatRuntime(movie.runtime)
 :"Runtime unavailable";
 
-document.getElementById("detailOverview").textContent=
+
+document.getElementById("detailOverview")
+.textContent=
 movie.overview||
 "No description available for this movie.";
+
 
 const director=
 (movie.credits?.crew||[])
 .find(x=>x.job==="Director");
 
-document.getElementById("detailDirector").innerHTML=
+
+document.getElementById("detailDirector")
+.innerHTML=
+
 director
+
 ?`🎥 Directed by <strong>${escapeHTML(director.name)}</strong>`
+
 :"🎥 Director information unavailable";
 
-document.getElementById("detailGenres").innerHTML=
+
+document.getElementById("detailGenres")
+.innerHTML=
+
 (movie.genres||[])
-.map(g=>`<span class="genre-tag">${escapeHTML(g.name)}</span>`)
+.map(g=>
+`<span class="genre-tag">${escapeHTML(g.name)}</span>`
+)
 .join("");
 
-const favorite=document.getElementById("favoriteButton");
-
-favorite.textContent=
-isFavorite(movie.id)
-?"💔 Remove Favorite"
-:"❤️ Favorite";
 
 renderCast(movie.credits?.cast||[]);
+
+
+await updateMovieButtons(movie.id);
 
 }
 
 
 function renderCast(cast){
 
-const grid=document.getElementById("castGrid");
+const grid=
+document.getElementById("castGrid");
 
-const topCast=cast.slice(0,12);
+
+const topCast=
+cast.slice(0,12);
+
 
 if(!topCast.length){
 
@@ -1443,20 +2001,37 @@ return;
 
 }
 
-grid.innerHTML=topCast.map(person=>{
+
+grid.innerHTML=
+topCast.map(person=>{
 
 const photo=
 person.profile_path
 ?IMG+person.profile_path
 :"";
 
+
 return`
+
 <div class="cast-card">
 
 ${
 photo
-?`<img class="cast-photo" src="${photo}" alt="${escapeHTML(person.name)}">`
-:`<div class="cast-photo" style="display:flex;align-items:center;justify-content:center;font-size:35px">👤</div>`
+
+?`<img
+class="cast-photo"
+src="${photo}"
+alt="${escapeHTML(person.name)}">`
+
+:`<div
+class="cast-photo"
+style="
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:35px">
+👤
+</div>`
 }
 
 <div class="cast-name">
@@ -1468,6 +2043,7 @@ ${escapeHTML(person.character||"")}
 </div>
 
 </div>
+
 `;
 
 }).join("");
@@ -1493,35 +2069,49 @@ function openTrailer(){
 
 if(!currentMovie)return;
 
-const videos=currentMovie.videos?.results||[];
+
+const videos=
+currentMovie.videos?.results||[];
+
 
 const trailer=
+
 videos.find(v=>
 v.site==="YouTube" &&
 v.type==="Trailer" &&
 v.official===true
 )
+
 ||
+
 videos.find(v=>
 v.site==="YouTube" &&
 v.type==="Trailer"
 )
+
 ||
+
 videos.find(v=>
 v.site==="YouTube" &&
 v.type==="Teaser"
 );
 
+
 if(!trailer){
 
-alert("Trailer is not available for this movie.");
+showToast(
+"Trailer is not available for this movie."
+);
 
 return;
 
 }
 
-document.getElementById("trailerFrame").src=
+
+document.getElementById("trailerFrame")
+.src=
 `https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0`;
+
 
 document.getElementById("trailerModal")
 .classList.add("show");
@@ -1531,7 +2121,8 @@ document.getElementById("trailerModal")
 
 function closeTrailer(){
 
-document.getElementById("trailerFrame").src="";
+document.getElementById("trailerFrame")
+.src="";
 
 document.getElementById("trailerModal")
 .classList.remove("show");
@@ -1540,103 +2131,767 @@ document.getElementById("trailerModal")
 
 
 /* =========================
+   SUPABASE USER
+========================= */
+
+async function getUser(){
+
+const {data,error}=
+await supabaseClient.auth.getUser();
+
+if(error)return null;
+
+return data.user||null;
+
+}
+
+
+async function requireLogin(){
+
+const user=await getUser();
+
+if(!user){
+
+showToast("Login first to use your personal library 🔐");
+
+openAuth();
+
+return null;
+
+}
+
+return user;
+
+}
+
+
+/* =========================
    FAVORITES
 ========================= */
 
-function getFavorites(){
+async function isFavorite(id){
 
-try{
+const user=await getUser();
 
-return JSON.parse(
-localStorage.getItem("cinepick_favorites")
-)||[];
-
-}catch{
-
-return[];
-
-}
-
-}
+if(!user)return false;
 
 
-function saveFavorites(list){
+const {data,error}=
+await supabaseClient
 
-localStorage.setItem(
-"cinepick_favorites",
-JSON.stringify(list)
-);
+.from("movie_lists")
 
-}
+.select("id")
+
+.eq("user_id",user.id)
+
+.eq("movie_id",id)
+
+.eq("list_type","favorite")
+
+.maybeSingle();
 
 
-function isFavorite(id){
+if(error){
 
-return getFavorites()
-.some(movie=>movie.id===id);
+console.error(error);
+
+return false;
 
 }
 
 
-function toggleFavorite(){
+return !!data;
+
+}
+
+
+async function toggleFavorite(){
 
 if(!currentMovie)return;
 
-let list=getFavorites();
 
-if(isFavorite(currentMovie.id)){
+const user=
+await requireLogin();
 
-list=list.filter(
-movie=>movie.id!==currentMovie.id
-);
+if(!user)return;
+
+
+const exists=
+await isFavorite(currentMovie.id);
+
+
+if(exists){
+
+const {error}=
+await supabaseClient
+
+.from("movie_lists")
+
+.delete()
+
+.eq("user_id",user.id)
+
+.eq("movie_id",currentMovie.id)
+
+.eq("list_type","favorite");
+
+
+if(error){
+
+console.error(error);
+
+showToast("Could not remove favorite.");
+
+return;
+
+}
+
+
+showToast("Removed from Favorites 💔");
+
 
 }else{
 
-list.push(currentMovie);
+const {error}=
+await supabaseClient
+
+.from("movie_lists")
+
+.insert({
+
+user_id:user.id,
+
+movie_id:currentMovie.id,
+
+movie_data:currentMovie,
+
+list_type:"favorite"
+
+});
+
+
+if(error){
+
+console.error(error);
+
+showToast("Could not save favorite.");
+
+return;
 
 }
 
-saveFavorites(list);
 
-document.getElementById("favoriteButton").textContent=
-isFavorite(currentMovie.id)
+showToast("Added to Favorites ❤️");
+
+}
+
+
+await updateMovieButtons(currentMovie.id);
+
+}
+
+
+/* =========================
+   WATCHLIST
+========================= */
+
+async function isWatchlist(id){
+
+const user=await getUser();
+
+if(!user)return false;
+
+
+const {data,error}=
+await supabaseClient
+
+.from("movie_lists")
+
+.select("id")
+
+.eq("user_id",user.id)
+
+.eq("movie_id",id)
+
+.eq("list_type","watchlist")
+
+.maybeSingle();
+
+
+if(error){
+
+console.error(error);
+
+return false;
+
+}
+
+
+return !!data;
+
+}
+
+
+async function toggleWatchlist(){
+
+if(!currentMovie)return;
+
+
+const user=
+await requireLogin();
+
+if(!user)return;
+
+
+const exists=
+await isWatchlist(currentMovie.id);
+
+
+if(exists){
+
+const {error}=
+await supabaseClient
+
+.from("movie_lists")
+
+.delete()
+
+.eq("user_id",user.id)
+
+.eq("movie_id",currentMovie.id)
+
+.eq("list_type","watchlist");
+
+
+if(error){
+
+console.error(error);
+
+showToast("Could not remove from Watchlist.");
+
+return;
+
+}
+
+
+showToast("Removed from Watchlist 💔");
+
+
+}else{
+
+const {error}=
+await supabaseClient
+
+.from("movie_lists")
+
+.insert({
+
+user_id:user.id,
+
+movie_id:currentMovie.id,
+
+movie_data:currentMovie,
+
+list_type:"watchlist"
+
+});
+
+
+if(error){
+
+console.error(error);
+
+showToast("Could not save Watchlist.");
+
+return;
+
+}
+
+
+showToast("Added to Watchlist 📋");
+
+}
+
+
+await updateMovieButtons(currentMovie.id);
+
+}
+
+
+/* =========================
+   UPDATE DETAIL BUTTONS
+========================= */
+
+async function updateMovieButtons(id){
+
+const favoriteButton=
+document.getElementById("favoriteButton");
+
+const watchlistButton=
+document.getElementById("watchlistButton");
+
+
+const user=await getUser();
+
+
+if(!user){
+
+favoriteButton.textContent="❤️ Favorite";
+
+watchlistButton.textContent="📋 Watchlist";
+
+return;
+
+}
+
+
+const favorite=
+await isFavorite(id);
+
+const watchlist=
+await isWatchlist(id);
+
+
+favoriteButton.textContent=
+favorite
 ?"💔 Remove Favorite"
 :"❤️ Favorite";
 
+
+watchlistButton.textContent=
+watchlist
+?"❌ Remove Watchlist"
+:"📋 Watchlist";
+
 }
 
 
-function showFavorites(){
+/* =========================
+   RECENTLY VIEWED
+========================= */
 
-const favorites=getFavorites();
+async function addToHistory(movie){
 
-document.getElementById("sectionTitle").textContent=
-"❤️ My Favorites";
+const user=await getUser();
 
-document.getElementById("movieGrid").innerHTML="";
+if(!user)return;
 
-document.getElementById("loadMoreBtn").style.display="none";
 
-if(!favorites.length){
+const {error}=
+await supabaseClient
 
-document.getElementById("movieGrid").innerHTML=
-`
-<div class="empty" style="grid-column:1/-1">
-<h3>No favorites yet ❤️</h3>
-<p>Open a movie and add it to your favorites.</p>
+.from("movie_history")
+
+.insert({
+
+user_id:user.id,
+
+movie_id:movie.id,
+
+movie_data:movie
+
+});
+
+
+if(error){
+
+console.error("History error:",error);
+
+}
+
+}
+
+
+/* =========================
+   LIBRARY
+========================= */
+
+async function openLibrary(type){
+
+const user=await requireLogin();
+
+if(!user)return;
+
+
+currentLibrary=type;
+
+
+document.getElementById("libraryModal")
+.classList.add("show");
+
+
+document.body.style.overflow="hidden";
+
+
+document.getElementById("favoriteTab")
+.classList.toggle(
+"active",
+type==="favorite"
+);
+
+document.getElementById("watchlistTab")
+.classList.toggle(
+"active",
+type==="watchlist"
+);
+
+document.getElementById("historyTab")
+.classList.toggle(
+"active",
+type==="history"
+);
+
+
+const title=
+type==="favorite"
+?"❤️ My Favorites"
+:type==="watchlist"
+?"📋 My Watchlist"
+:"🕐 Recently Viewed";
+
+
+document.getElementById("libraryTitle")
+.textContent=title;
+
+
+await loadLibrary(type);
+
+}
+
+
+async function loadLibrary(type){
+
+const user=await getUser();
+
+if(!user)return;
+
+
+const grid=
+document.getElementById("libraryGrid");
+
+
+grid.innerHTML=
+'<div class="spinner"></div>';
+
+
+if(type==="history"){
+
+const {data,error}=
+await supabaseClient
+
+.from("movie_history")
+
+.select("*")
+
+.eq("user_id",user.id)
+
+.order("viewed_at",{ascending:false})
+
+.limit(50);
+
+
+if(error){
+
+console.error(error);
+
+grid.innerHTML=
+'<div class="library-empty">Could not load history.</div>';
+
+return;
+
+}
+
+
+const unique=[];
+const seen=new Set();
+
+
+(data||[]).forEach(row=>{
+
+if(!seen.has(row.movie_id)){
+
+seen.add(row.movie_id);
+
+unique.push(row.movie_data);
+
+}
+
+});
+
+
+renderLibraryMovies(unique);
+
+return;
+
+}
+
+
+const {data,error}=
+await supabaseClient
+
+.from("movie_lists")
+
+.select("*")
+
+.eq("user_id",user.id)
+
+.eq("list_type",type)
+
+.order("created_at",{ascending:false});
+
+
+if(error){
+
+console.error(error);
+
+grid.innerHTML=
+'<div class="library-empty">Could not load your library.</div>';
+
+return;
+
+}
+
+
+const movies=
+(data||[]).map(row=>row.movie_data);
+
+
+renderLibraryMovies(movies);
+
+}
+
+
+function renderLibraryMovies(movies){
+
+const grid=
+document.getElementById("libraryGrid");
+
+
+if(!movies.length){
+
+grid.innerHTML=`
+
+<div
+class="library-empty"
+style="grid-column:1/-1">
+
+<h3>
+${
+currentLibrary==="favorite"
+?"No Favorites Yet ❤️"
+:currentLibrary==="watchlist"
+?"Your Watchlist Is Empty 📋"
+:"No Recently Viewed Movies 🕐"
+}
+</h3>
+
+<p>
+Open movies and build your personal CinePick library.
+</p>
+
 </div>
+
 `;
 
 return;
 
 }
 
-currentMovies=favorites;
 
-renderMovies(favorites);
+grid.innerHTML="";
 
-document.getElementById("resultText").textContent=
-`${favorites.length} saved movies`;
+
+movies.forEach(movie=>{
+
+const card=document.createElement("div");
+
+card.className="card";
+
+
+const poster=
+movie.poster_path
+?IMG+movie.poster_path
+:"";
+
+
+const year=
+movie.release_date
+?movie.release_date.slice(0,4)
+:"N/A";
+
+
+card.innerHTML=`
+
+<div class="poster">
+
+${
+poster
+
+?`<img
+src="${poster}"
+loading="lazy"
+alt="${escapeHTML(movie.title||"Movie")}">`
+
+:`<div
+style="
+display:flex;
+align-items:center;
+justify-content:center;
+height:100%;
+font-size:40px">
+🎬
+</div>`
+}
+
+<div class="rating">
+⭐ ${Number(movie.vote_average||0).toFixed(1)}
+</div>
+
+</div>
+
+
+<div class="card-info">
+
+<div class="card-title">
+${escapeHTML(movie.title||"Untitled")}
+</div>
+
+<div class="card-meta">
+<span>${year}</span>
+
+<span>
+⭐ ${Number(movie.vote_average||0).toFixed(1)}
+</span>
+</div>
+
+<button
+class="card-btn"
+onclick="openMovie(${movie.id})">
+View Details
+</button>
+
+</div>
+
+`;
+
+
+grid.appendChild(card);
+
+});
+
+}
+
+
+function closeLibrary(){
+
+document.getElementById("libraryModal")
+.classList.remove("show");
+
+document.body.style.overflow="";
+
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+async function openProfile(){
+
+const user=
+await requireLogin();
+
+if(!user)return;
+
+
+document.getElementById("profileModal")
+.classList.add("show");
+
+
+document.body.style.overflow="hidden";
+
+
+const email=user.email||"CinePick User";
+
+
+document.getElementById("profileEmail")
+.textContent=email;
+
+
+document.getElementById("profileAvatar")
+.textContent=
+email.charAt(0).toUpperCase();
+
+
+document.getElementById("profileJoined")
+.textContent=
+"Member since "+
+new Date(user.created_at)
+.toLocaleDateString();
+
+
+await loadProfileStats(user.id);
+
+}
+
+
+async function loadProfileStats(userId){
+
+const favorites=
+await supabaseClient
+
+.from("movie_lists")
+
+.select("id",{count:"exact",head:true})
+
+.eq("user_id",userId)
+
+.eq("list_type","favorite");
+
+
+const watchlist=
+await supabaseClient
+
+.from("movie_lists")
+
+.select("id",{count:"exact",head:true})
+
+.eq("user_id",userId)
+
+.eq("list_type","watchlist");
+
+
+const history=
+await supabaseClient
+
+.from("movie_history")
+
+.select("id",{count:"exact",head:true})
+
+.eq("user_id",userId);
+
+
+document.getElementById("profileFavorites")
+.textContent=favorites.count||0;
+
+
+document.getElementById("profileWatchlist")
+.textContent=watchlist.count||0;
+
+
+document.getElementById("profileHistory")
+.textContent=history.count||0;
+
+}
+
+
+function closeProfile(){
+
+document.getElementById("profileModal")
+.classList.remove("show");
+
+document.body.style.overflow="";
 
 }
 
@@ -1649,11 +2904,18 @@ async function shareMovie(){
 
 if(!currentMovie)return;
 
+
 const data={
+
 title:currentMovie.title,
-text:`Check out ${currentMovie.title} on CinePick 🎬`,
+
+text:
+`Check out ${currentMovie.title} on CinePick 🎬`,
+
 url:window.location.href
+
 };
+
 
 try{
 
@@ -1667,7 +2929,7 @@ await navigator.clipboard.writeText(
 window.location.href
 );
 
-alert("Movie link copied! 📋");
+showToast("Movie link copied! 📋");
 
 }
 
@@ -1702,41 +2964,49 @@ document.getElementById("authModal")
 
 function toggleAuthMode(){
 
-authMode=authMode==="login"?"signup":"login";
+authMode=
+authMode==="login"
+?"signup"
+:"login";
+
 
 if(authMode==="login"){
 
-document.getElementById("authTitle").textContent=
-"Welcome back";
+document.getElementById("authTitle")
+.textContent="Welcome back";
 
-document.getElementById("authDescription").textContent=
+document.getElementById("authDescription")
+.textContent=
 "Login to your CinePick account.";
 
-document.getElementById("authSubmit").textContent=
-"Login";
+document.getElementById("authSubmit")
+.textContent="Login";
 
-document.getElementById("authSwitchText").textContent=
+document.getElementById("authSwitchText")
+.textContent=
 "Don't have an account?";
 
-document.getElementById("authSwitchButton").textContent=
-"Sign up";
+document.getElementById("authSwitchButton")
+.textContent="Sign up";
 
 }else{
 
-document.getElementById("authTitle").textContent=
-"Create account";
+document.getElementById("authTitle")
+.textContent="Create account";
 
-document.getElementById("authDescription").textContent=
+document.getElementById("authDescription")
+.textContent=
 "Create your free CinePick account.";
 
-document.getElementById("authSubmit").textContent=
-"Sign Up";
+document.getElementById("authSubmit")
+.textContent="Sign Up";
 
-document.getElementById("authSwitchText").textContent=
+document.getElementById("authSwitchText")
+.textContent=
 "Already have an account?";
 
-document.getElementById("authSwitchButton").textContent=
-"Login";
+document.getElementById("authSwitchButton")
+.textContent="Login";
 
 }
 
@@ -1745,57 +3015,96 @@ document.getElementById("authSwitchButton").textContent=
 
 async function handleAuth(){
 
-const email=document.getElementById("authEmail").value.trim();
+const email=
+document.getElementById("authEmail")
+.value.trim();
 
-const password=document.getElementById("authPassword").value;
+
+const password=
+document.getElementById("authPassword")
+.value;
+
 
 if(!email||!password){
 
-alert("Please enter email and password.");
+showToast(
+"Please enter email and password."
+);
 
 return;
 
 }
 
+
 try{
 
 if(authMode==="login"){
 
-const {error}=await supabaseClient.auth
+const {error}=
+await supabaseClient.auth
 .signInWithPassword({
+
 email,
+
 password
+
 });
+
 
 if(error)throw error;
 
-alert("Login successful! 🎉");
+
+showToast("Login successful! 🎉");
 
 closeAuth();
 
+
 }else{
 
-const {error}=await supabaseClient.auth
+const {data,error}=
+await supabaseClient.auth
 .signUp({
+
 email,
+
 password
+
 });
+
 
 if(error)throw error;
 
-alert(
-"Account created! Check your email if verification is required."
+
+if(data.session){
+
+showToast(
+"Account created successfully! 🎉"
 );
+
+}else{
+
+showToast(
+"Account created! Check your email for verification."
+);
+
+}
+
 
 closeAuth();
 
 }
 
-updateAuthButton();
+
+await updateAuthButton();
+
 
 }catch(e){
 
-alert(e.message||"Authentication failed.");
+console.error(e);
+
+showToast(
+e.message||"Authentication failed."
+);
 
 }
 
@@ -1806,27 +3115,41 @@ async function logout(){
 
 await supabaseClient.auth.signOut();
 
+closeProfile();
+
+closeLibrary();
+
 updateAuthButton();
 
-alert("Logged out.");
+showToast("Logged out successfully.");
 
 }
 
 
+/* =========================
+   AUTH BUTTON
+========================= */
+
 async function updateAuthButton(){
 
-const {data}=await supabaseClient.auth.getSession();
+const {data}=
+await supabaseClient.auth.getSession();
 
-const button=document.getElementById("authButton");
+
+const button=
+document.getElementById("authButton");
+
 
 if(data.session){
 
 button.textContent="Logout";
+
 button.onclick=logout;
 
 }else{
 
 button.textContent="Login";
+
 button.onclick=openAuth;
 
 }
@@ -1840,10 +3163,16 @@ button.onclick=openAuth;
 
 function formatRuntime(minutes){
 
-const h=Math.floor(minutes/60);
-const m=minutes%60;
+const h=
+Math.floor(minutes/60);
 
-if(!h)return`${m} min`;
+const m=
+minutes%60;
+
+
+if(!h)
+return`${m} min`;
+
 
 return`${h}h ${m}m`;
 
@@ -1853,18 +3182,65 @@ return`${h}h ${m}m`;
 function escapeHTML(value){
 
 return String(value||"")
+
 .replace(/&/g,"&amp;")
+
 .replace(/</g,"&lt;")
+
 .replace(/>/g,"&gt;")
+
 .replace(/"/g,"&quot;")
+
 .replace(/'/g,"&#039;");
 
 }
 
 
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
+
+function showToast(message){
+
+const toast=
+document.getElementById("toast");
+
+
+toast.textContent=message;
+
+toast.classList.add("show");
+
+
+clearTimeout(toastTimer);
+
+
+toastTimer=setTimeout(()=>{
+
+toast.classList.remove("show");
+
+},2800);
+
+}
+
+
+/* =========================
+   AUTH STATE
+========================= */
+
 supabaseClient.auth.onAuthStateChange(
-()=>updateAuthButton()
+(event,session)=>{
+
+updateAuthButton();
+
+}
 );
+
+
+/* =========================
+   START
+========================= */
 
 updateAuthButton();
 
